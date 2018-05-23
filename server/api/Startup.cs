@@ -23,6 +23,8 @@ using KinoplanungApi.Auth;
 
 using AutoMapper;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 
 namespace KinoplanungApi
 {
@@ -41,6 +43,7 @@ namespace KinoplanungApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             // add identity
             var builder = services.AddIdentityCore<AppUser>(o =>
             {
@@ -113,6 +116,7 @@ namespace KinoplanungApi
             services.AddAutoMapper();
 
             services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -125,10 +129,18 @@ namespace KinoplanungApi
 
 
             app.UseAuthentication();
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
             app.UseMvc(options =>
             {
-                options.MapRoute("PrincipalDefault",
+                /* options.MapRoute("PrincipalDefault",
                 "api/{principal}/{controller}/{action}/{id?}"
+                ); */
+                options.MapRoute("Default",
+                "api/{controller}/{action}/{id?}"
                 );
             });
         }

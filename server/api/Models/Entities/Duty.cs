@@ -17,7 +17,6 @@ namespace KinoplanungApi.Models.Entities
         public int DutyTypeId { get; set; }
         public DutyType DutyType { get; set; }
 
-        [Required]
         [ForeignKey("Function")]
         public int FunctionId { get; set; }
 

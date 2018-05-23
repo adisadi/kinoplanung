@@ -5,7 +5,12 @@ import {
   DxTemplateModule,
   DxResponsiveBoxModule,
   DxToolbarModule,
-  DxSelectBoxModule
+  DxSelectBoxModule,
+  DxFormModule,
+  DxFormComponent,
+  DxButtonModule,
+  DxTextBoxModule,
+  DxLoadIndicatorModule
 } from 'devextreme-angular';
 
 
@@ -15,14 +20,22 @@ import {
     DxTemplateModule,
     DxResponsiveBoxModule,
     DxToolbarModule,
-    DxSelectBoxModule
+    DxSelectBoxModule,
+    DxButtonModule,
+    DxTextBoxModule,
+    DxLoadIndicatorModule,
+    DxFormModule
   ],
   exports:[
     DxSchedulerModule,
     DxTemplateModule,
     DxResponsiveBoxModule,
     DxToolbarModule,
-    DxSelectBoxModule
+    DxSelectBoxModule,
+    DxButtonModule,
+    DxTextBoxModule,
+    DxLoadIndicatorModule,
+    DxFormModule
   ],
   declarations: []
 })

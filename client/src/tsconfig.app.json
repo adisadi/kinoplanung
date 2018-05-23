@@ -3,7 +3,10 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "module": "es2015",
-    "types": []
+    "types": [],
+    "paths": {
+      "jszip": ["node_modules/jszip/dist/jszip.min.js"]
+    }
   },
   "exclude": [
     "src/test.ts",
