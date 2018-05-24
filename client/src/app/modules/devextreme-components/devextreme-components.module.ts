@@ -10,12 +10,15 @@ import {
   DxFormComponent,
   DxButtonModule,
   DxTextBoxModule,
-  DxLoadIndicatorModule
+  DxLoadIndicatorModule,
+  DxDataGridModule,
+  DxColorBoxModule
 } from 'devextreme-angular';
 
 
 @NgModule({
   imports: [
+    DxDataGridModule,
     DxSchedulerModule,
     DxTemplateModule,
     DxResponsiveBoxModule,
@@ -24,9 +27,11 @@ import {
     DxButtonModule,
     DxTextBoxModule,
     DxLoadIndicatorModule,
+    DxColorBoxModule,
     DxFormModule
   ],
   exports:[
+    DxDataGridModule,
     DxSchedulerModule,
     DxTemplateModule,
     DxResponsiveBoxModule,
@@ -35,6 +40,7 @@ import {
     DxButtonModule,
     DxTextBoxModule,
     DxLoadIndicatorModule,
+    DxColorBoxModule,
     DxFormModule
   ],
   declarations: []

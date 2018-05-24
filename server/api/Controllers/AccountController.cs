@@ -1,5 +1,3 @@
-
-
 using System.Threading.Tasks;
 using KinoplanungApi.Data;
 using KinoplanungApi.Helpers;

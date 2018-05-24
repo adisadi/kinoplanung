@@ -13,8 +13,10 @@ import { AuthGuard } from './guards/auth.guard';
 import { AlertService } from './services/alert.service';
 
 import { IdentityModule } from './features/identity/identity.module';
-
 import { OverviewModule } from './features/overview/overview.module';
+import { TenantsModule } from './features/tenants/tenants.module';
+import { FunctionsModule } from './features/functions/functions.module';
+import { DutyTypesModule } from './features/dutytypes/dutytypes.module';
 
 import { DevextremeComponentsModule } from './modules/devextreme-components/devextreme-components.module';
 import { HeaderComponent } from './components/header/header.component';
@@ -27,7 +29,7 @@ import { AlertComponent } from './components/alert/alert.component';
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    AlertComponent
+    AlertComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,7 +37,10 @@ import { AlertComponent } from './components/alert/alert.component';
     AppRoutingModule,
     DevextremeComponentsModule,
     IdentityModule,
-    OverviewModule
+    OverviewModule,
+    TenantsModule,
+    FunctionsModule,
+    DutyTypesModule
   ],
   providers: [AppConfig, AuthGuard, AlertService],
   bootstrap: [AppComponent]
