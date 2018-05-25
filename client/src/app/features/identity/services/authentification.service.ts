@@ -4,32 +4,31 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { AppConfig } from '../../../app.config';
+import { AuthCommonService } from '../../../services/auth-common.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthentificationService {
 
-  constructor(private http: Http, private config: AppConfig) {
+  constructor(private http: Http, private config: AppConfig, private authCommonService: AuthCommonService) {
     console.log('AuthentificationService');
-   }
+  }
 
   login(username: string, password: string) {
-    
+
     console.log(JSON.stringify({ UserName: username, Password: password }));
     return this.http.post(this.config.apiUrl + '/api/auth/login', { UserName: username, Password: password }).pipe(
       map((response: Response) => {
-        // login successful if there's a jwt token in the response
         let user = response.json();
-        if (user && user.token) {
-          // store user details and jwt token in local storage to keep user logged in between page refreshes
-          localStorage.setItem('currentUser', JSON.stringify(user));
+        if (user.jwt) {
+          user.jwt = JSON.parse(user.jwt);
         }
+        this.authCommonService.Login(user);
       }));
   }
 
   logout() {
-    // remove user from local storage to log user out
-    localStorage.removeItem('currentUser');
+    this.authCommonService.Logout();
   }
 }

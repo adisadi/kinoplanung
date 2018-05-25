@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace KinoplanungApi.Controllers
 {
     /*   [Authorize(Policy = "ApiUser")] */
+     [Authorize(Roles = "Administrator")]
     public class FunctionController : Controller
     {
         private readonly ClaimsPrincipal _caller;
@@ -25,9 +26,9 @@ namespace KinoplanungApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int id)
         {
-            return new OkObjectResult(await _appDbContext.Functions.ToListAsync());
+            return new OkObjectResult(await _appDbContext.Functions.Where(t => t.TenantId == id).ToListAsync());
         }
 
         [HttpGet]
@@ -77,7 +78,7 @@ namespace KinoplanungApi.Controllers
 
             function.Name = model.Name;
             function.TenantId=model.TenantId;
-            
+
             await _appDbContext.SaveChangesAsync();
 
             return new OkObjectResult(new { new_id = function.Id });

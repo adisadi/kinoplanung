@@ -1,16 +1,14 @@
-<dx-form id="form" style="padding-top: 20px">
-    <dxi-item itemType="group" caption="Mandanten">
-        <dxi-item>
-            <dx-data-grid id="gridContainer" [dataSource]="dataSource" keyExpr="id" [allowColumnReordering]="true"
-                (onRowInserting)="rowInsert($event)" (onRowUpdating)="rowUpdate($event)" (onRowRemoving)="rowDelete($event)">
-                <dxo-paging [enabled]="true"></dxo-paging>
-                <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
-                </dxo-editing>
-                <dxi-column dataField="name" caption="Name">
-                    <dxi-validation-rule type="required"></dxi-validation-rule>
-                </dxi-column>
-            </dx-data-grid>
-        </dxi-item>
+<div class="dx-form-group-with-caption dx-form-group-caption" style="padding-top:20px">Mandanten
+    <hr class="dx-form-group-content" />
+</div>
 
-    </dxi-item>
-</dx-form>
+
+<dx-data-grid id="gridContainer" [dataSource]="dataSource" keyExpr="id" [allowColumnReordering]="true" (onRowInserting)="rowInsert($event)"
+    (onRowUpdating)="rowUpdate($event)" (onRowRemoving)="rowDelete($event)">
+    <dxo-paging [enabled]="true"></dxo-paging>
+    <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+    </dxo-editing>
+    <dxi-column dataField="name" caption="Name">
+        <dxi-validation-rule type="required"></dxi-validation-rule>
+    </dxi-column>
+</dx-data-grid>

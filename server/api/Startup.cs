@@ -103,7 +103,8 @@ namespace KinoplanungApi
                 options.AddPolicy("ApiUser", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, Constants.Strings.JwtClaims.ApiAccess));
             });
 
-
+            services.AddScoped<IRoleValidator<IdentityRole>, RoleValidator<IdentityRole>>();
+            services.AddScoped<RoleManager<IdentityRole>, RoleManager<IdentityRole>>();
 
             services.AddSingleton<IJwtFactory, JwtFactory>();
 

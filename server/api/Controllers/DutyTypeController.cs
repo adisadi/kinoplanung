@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace KinoplanungApi.Controllers
 {
     /*   [Authorize(Policy = "ApiUser")] */
+     [Authorize(Roles = "Administrator")]
     public class DutyTypeController : Controller
     {
         private readonly ClaimsPrincipal _caller;
@@ -25,9 +26,9 @@ namespace KinoplanungApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int id)
         {
-            return new OkObjectResult(await _appDbContext.DutyTypes.ToListAsync());
+            return new OkObjectResult(await _appDbContext.DutyTypes.Where(d=>d.TenantId==id).ToListAsync());
         }
 
         [HttpGet]

@@ -13,29 +13,42 @@ using Microsoft.EntityFrameworkCore;
 namespace KinoplanungApi.Controllers
 {
     /*   [Authorize(Policy = "ApiUser")] */
+
     public class TenantController : Controller
     {
         private readonly ClaimsPrincipal _caller;
+
+        private readonly string _userId;
+
         private readonly ApplicationDbContext _appDbContext;
 
         public TenantController(UserManager<AppUser> userManager, ApplicationDbContext appDbContext, IHttpContextAccessor httpContextAccessor)
         {
             _caller = httpContextAccessor.HttpContext.User;
             _appDbContext = appDbContext;
+            _userId=((ClaimsIdentity)_caller.Identity).FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Id).Value;
         }
 
+        [Authorize(Roles = "Administrator,Manager,Member")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return new OkObjectResult(await _appDbContext.Tenants.ToListAsync());
+            if (_caller.IsInRole("Administrator"))
+                return new OkObjectResult(await _appDbContext.Tenants.ToListAsync());
+            else {
+                return new OkObjectResult( await _appDbContext.Tenants.Where(t=>t.AppUserMappings.Any(m=>m.AppUserId==_userId)).ToListAsync() );
+            }
+            
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         public async Task<IActionResult> Get(int id)
         {
             return new OkObjectResult(await _appDbContext.Tenants.SingleOrDefaultAsync(t => t.Id == id));
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
@@ -51,6 +64,7 @@ namespace KinoplanungApi.Controllers
             return new OkObjectResult($"Tenant with Id:{id} deleted!");
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public async Task<IActionResult> Save([FromBody]TenantViewModel model)
         {

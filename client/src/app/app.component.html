@@ -1,5 +1,5 @@
 <div id="page">
-  <dx-responsive-box singleColumnScreen="sm" [(screenByWidth)]="screen">
+  <!-- <dx-responsive-box singleColumnScreen="sm" [(screenByWidth)]="screen">
     <dxi-row [ratio]="1"></dxi-row>
     <dxi-row [ratio]="2" screen="xs"></dxi-row>
     <dxi-row [ratio]="2"></dxi-row>
@@ -34,5 +34,9 @@
       <dxi-location [row]="3" [col]="0" [colspan]="2" screen="sm"></dxi-location>
       <app-footer></app-footer>
     </dxi-item>
-  </dx-responsive-box>
+  </dx-responsive-box> -->
+  <app-header></app-header>
+  <app-alert></app-alert>
+  <router-outlet></router-outlet>
+  <app-footer></app-footer>
 </div>

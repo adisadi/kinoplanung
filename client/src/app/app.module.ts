@@ -11,6 +11,8 @@ import { AppConfig } from './app.config';
 import { AuthGuard } from './guards/auth.guard';
 
 import { AlertService } from './services/alert.service';
+import { AuthCommonService } from './services/auth-common.service';
+import {TenantCommonService} from './services/tenant-common.service';
 
 import { IdentityModule } from './features/identity/identity.module';
 import { OverviewModule } from './features/overview/overview.module';
@@ -42,7 +44,12 @@ import { AlertComponent } from './components/alert/alert.component';
     FunctionsModule,
     DutyTypesModule
   ],
-  providers: [AppConfig, AuthGuard, AlertService],
+  providers: [AppConfig,
+    AuthGuard,
+    AuthCommonService,
+    AlertService,
+    TenantCommonService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

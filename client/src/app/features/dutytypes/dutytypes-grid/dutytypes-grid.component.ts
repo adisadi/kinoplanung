@@ -3,6 +3,7 @@ import { DutyTypesService } from '../services/dutytypes.service';
 import { AlertService } from '../../../services/alert.service';
 
 import DataSource from 'devextreme/data/data_source';
+import { TenantCommonService } from '../../../services/tenant-common.service';
 
 @Component({
   selector: 'app-dutytypes-grid',
@@ -11,36 +12,36 @@ import DataSource from 'devextreme/data/data_source';
 })
 export class DutyTypesGridComponent implements OnInit {
 
-  constructor(private functionsService: DutyTypesService, private alertService: AlertService) { }
+  constructor(private dutyTypeService: DutyTypesService,
+    private alertService: AlertService,
+    private tenantCommonService: TenantCommonService) { }
 
   tenants: any = [];
   dataSource: any = [];
-
+  groupCaption: string = "Dienste";
   ngOnInit() {
-    this.functionsService.getAllTenants().toPromise()
-      .then(
+    this.tenantCommonService.CurrentTenant().subscribe(tenant => {
+      this.loadData(tenant);
+    });
+    this.loadData(this.tenantCommonService.getCurrentTenant(null));
+  }
+
+  loadData(tenant) {
+    this.groupCaption = `Dienste für Mandant ${tenant.name}`;
+    this.dutyTypeService.getAll()
+      .subscribe(
         data => {
-          this.tenants = data;
-          this.functionsService.getAll()
-            .subscribe(
-              data => {
-                this.dataSource = data;
-              },
-              error => {
-                console.log(error);
-                this.alertService.error(error._body);
-              });
+          this.dataSource = data;
         },
         error => {
           console.log(error);
           this.alertService.error(error._body);
         });
-
   }
 
   rowInsert(event) {
     event.cancel = new Promise((resolve, reject) => {
-      this.functionsService.save(event.data)
+      this.dutyTypeService.save(event.data)
         .subscribe(
           (result) => {
             event.data.id = result.new_id;
@@ -63,7 +64,7 @@ export class DutyTypesGridComponent implements OnInit {
 
   rowDelete(event) {
     event.cancel = new Promise((resolve, reject) => {
-      this.functionsService.delete(event.data.id)
+      this.dutyTypeService.delete(event.data.id)
         .subscribe(
           () => {
             this.alertService.success(`Dienst '${event.data.name}' gelöscht`);

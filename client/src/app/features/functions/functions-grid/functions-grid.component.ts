@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { FunctionsService } from '../services/functions.service';
 import { AlertService } from '../../../services/alert.service';
 
 import DataSource from 'devextreme/data/data_source';
+import { TenantCommonService } from '../../../services/tenant-common.service';
 
 @Component({
   selector: 'app-functions-grid',
@@ -11,31 +12,35 @@ import DataSource from 'devextreme/data/data_source';
 })
 export class FunctionsGridComponent implements OnInit {
 
-  constructor(private functionsService: FunctionsService, private alertService: AlertService) { }
+  constructor(private functionsService: FunctionsService,
+    private alertService: AlertService,
+    private tenantCommonService: TenantCommonService,
+    private ngZone: NgZone) { }
 
-  tenants: any = [];
   dataSource: any = [];
-
+  groupCaption: string = "Funktionen";
   ngOnInit() {
-    this.functionsService.getAllTenants().toPromise()
-      .then(
+    this.tenantCommonService.CurrentTenant().subscribe(tenant => {
+      //this.ngZone.run(() => {
+        console.log("loaddata");
+        this.loadData(tenant);
+      //});
+    });
+    this.loadData(this.tenantCommonService.getCurrentTenant(null));
+  }
+
+  loadData(tenant) {
+    this.groupCaption = `Funktionen für Mandant ${tenant.name}`; 
+    this.functionsService.getAll()
+      .subscribe(
         data => {
-          this.tenants = data;
-          this.functionsService.getAll()
-            .subscribe(
-              data => {
-                this.dataSource = data;
-              },
-              error => {
-                console.log(error);
-                this.alertService.error(error._body);
-              });
+         /*  this.groupCaption = `Funktionen für Mandant ${tenant.name}`;  */
+          this.dataSource = data;      
         },
         error => {
           console.log(error);
           this.alertService.error(error._body);
         });
-
   }
 
   rowInsert(event) {
@@ -56,7 +61,7 @@ export class FunctionsGridComponent implements OnInit {
   }
   rowUpdate(event) {
     console.log(event);
-    event.data = Object.assign({},event.oldData,event.newData);
+    event.data = Object.assign({}, event.oldData, event.newData);
     console.log(event.data);
     this.rowInsert(event);
   }

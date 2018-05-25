@@ -22,11 +22,10 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthentificationService,
-    private alertService:AlertService
+    private alertService: AlertService
   ) { }
 
   ngOnInit() {
-    console.log('init');
     // reset login status
     this.authenticationService.logout();
 
@@ -44,6 +43,7 @@ export class LoginComponent implements OnInit {
         .subscribe(
           data => {
             this.router.navigate([this.returnUrl]);
+            console.log('navigate to ' + this.returnUrl);
           },
           error => {
             console.log(error);

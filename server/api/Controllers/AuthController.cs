@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
- 
+
 
 namespace KinoplanungApi.Controllers
 {
@@ -17,14 +17,17 @@ namespace KinoplanungApi.Controllers
     public class AuthController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
+
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IJwtFactory _jwtFactory;
         private readonly JwtIssuerOptions _jwtOptions;
 
-        public AuthController(UserManager<AppUser> userManager, IJwtFactory jwtFactory, IOptions<JwtIssuerOptions> jwtOptions)
+        public AuthController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IJwtFactory jwtFactory, IOptions<JwtIssuerOptions> jwtOptions)
         {
             _userManager = userManager;
             _jwtFactory = jwtFactory;
             _jwtOptions = jwtOptions.Value;
+            _roleManager = roleManager;
         }
 
         // POST api/auth/login
@@ -42,8 +45,11 @@ namespace KinoplanungApi.Controllers
                 return BadRequest(Errors.AddErrorToModelState("login_failure", "Invalid username or password.", ModelState));
             }
 
-          var jwt = await Tokens.GenerateJwt(identity, _jwtFactory, credentials.UserName, _jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
-          return new OkObjectResult(jwt);
+            var jwt = await Tokens.GenerateJwt(identity, _jwtFactory, credentials.UserName, _jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
+
+            var roleClaim = identity.FindFirst(c => c.Type == ClaimTypes.Role);
+
+            return new OkObjectResult(new { role = roleClaim.Value, jwt = jwt });
         }
 
         private async Task<ClaimsIdentity> GetClaimsIdentity(string userName, string password)
@@ -59,7 +65,8 @@ namespace KinoplanungApi.Controllers
             // check the credentials
             if (await _userManager.CheckPasswordAsync(userToVerify, password))
             {
-                return await Task.FromResult(_jwtFactory.GenerateClaimsIdentity(userName, userToVerify.Id));
+                var roles = await _userManager.GetRolesAsync(userToVerify);
+                return await Task.FromResult(_jwtFactory.GenerateClaimsIdentity(userName, userToVerify.Id, roles));
             }
 
             // Credentials are invalid, or account doesn't exist
