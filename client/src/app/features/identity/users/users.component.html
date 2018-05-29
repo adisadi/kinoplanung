@@ -1,0 +1,101 @@
+<div class="dx-form-group-with-caption dx-form-group-caption"
+     style="padding-top:20px">Benutzer
+  <hr class="dx-form-group-content" />
+</div>
+
+<dx-data-grid id="gridContainer"
+              [dataSource]="dataSource"
+              keyExpr="id"
+              [allowColumnReordering]="true"
+              (onRowInserting)="rowInsert($event)"
+              (onRowUpdating)="rowUpdate($event)"
+              (onRowRemoving)="rowDelete($event)">
+  <dxo-paging [enabled]="true"></dxo-paging>
+  <dxo-editing mode="popup"
+               [allowUpdating]="true"
+               [allowDeleting]="true"
+               [allowAdding]="true"
+               [useIcons]="true">
+    <!-- <dxo-form>
+      <dxi-item itemType="group" caption="Personal Data">
+        <dxi-item dataField="firstName"></dxi-item>
+        <dxi-item dataField="lastName"></dxi-item>
+        <dxi-item dataField="email"></dxi-item>
+      </dxi-item>
+      <dxi-item itemType="group" caption="Rollen">
+        <dxi-item dataField="role" caption="Role">
+          <dxo-lookup [dataSource]="['R1','R2']" displayExpr="Name" valueExpr="ID">
+          </dxo-lookup>
+        </dxi-item>
+        <dxi-item caption="Mandanten"></dxi-item>
+      </dxi-item>
+    </dxo-form> -->
+    <dxo-popup title="Benutzer editieren"
+               [showTitle]="true"
+               [position]="{ my: 'top', at: 'top', of: window }">
+
+    </dxo-popup>
+  </dxo-editing>
+  <dxi-column dataField="firstName"
+              caption="Vorname">
+    <dxi-validation-rule type="required"></dxi-validation-rule>
+  </dxi-column>
+  <dxi-column dataField="lastName"
+              caption="Nachname">
+    <dxi-validation-rule type="required"></dxi-validation-rule>
+  </dxi-column>
+  <dxi-column dataField="email"
+              caption="Email">
+    <dxi-validation-rule type="required"></dxi-validation-rule>
+  </dxi-column>
+  <dxi-column dataField="password"
+              [visible]="false"
+              caption="Passwort">
+    <dxi-validation-rule type="required"></dxi-validation-rule>
+  </dxi-column>
+  <dxi-column dataField="role"
+              caption="Rolle">
+    <dxi-validation-rule type="required"></dxi-validation-rule>
+    <dxo-lookup [dataSource]="roles"
+                displayExpr="Name"
+                valueExpr="Name">
+    </dxo-lookup>
+  </dxi-column>
+
+  <dxi-column editCellTemplate="editCellTemplate"
+              cellTemplate="cellTemplate"
+              dataField="tenants"
+              caption="Mandanten">
+    <dxi-validation-rule type="required"></dxi-validation-rule>
+    <div *dxTemplate="let cell of 'editCellTemplate'">
+      <dx-drop-down-box [(value)]="cell.value"
+                        valueExpr="id"
+                        displayExpr="name"
+                        placeholder="Select a value..."
+                        [showClearButton]="true"
+                        (onValueChanged)="onValueChanged($event,cell)"
+                        (onClosed)="onClosed($event,cell)"
+                        [dataSource]="gridDataSource">
+
+        <div *dxTemplate="let data of 'content'">
+          <dx-data-grid [dataSource]="gridDataSource"
+                        key="id"
+                        [columns]="['name']"
+                        [selection]="{ mode: 'multiple' }"
+                        [hoverStateEnabled]="true"
+                        [paging]="{ enabled: true, pageSize: 10 }"
+                        [filterRow]="{ visible: false }"
+                        [scrolling]="{ mode: 'infinite' }"
+                        [(selectedRowKeys)]="cell.value">
+          </dx-data-grid>
+        </div>
+      </dx-drop-down-box>
+    </div>
+
+    <div *dxTemplate="let cell of 'cellTemplate'">
+      {{getTenantsAsString(cell.value)}}
+    </div>
+
+  </dxi-column>
+
+</dx-data-grid>

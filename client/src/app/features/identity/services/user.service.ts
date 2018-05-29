@@ -4,42 +4,25 @@ import { Http, RequestOptions, Response, Headers } from '@angular/http';
 import { AppConfig } from '../../../app.config';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AuthCommonService } from '../../../services/auth-common.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserService {
 
-    constructor(private http: Http, private config: AppConfig) { }
+    constructor(private http: Http, private config: AppConfig,private authCommonService: AuthCommonService) { }
 
     getAll() {
-        return this.http.get(this.config.apiUrl + '/users', this.jwt()).pipe(map((response: Response) => response.json()));
+        return this.http.get(this.config.apiUrl + '/api/accounts/getall',this.authCommonService.GetJwtRequestOptions()).pipe(map((response: Response) => response.json()));
     }
 
-    getById(id: number) {
-        return this.http.get(this.config.apiUrl + '/users/' + id, this.jwt()).pipe(map((response: Response) => response.json()));
-    }
-
-    create(user: User) {
-        return this.http.post(this.config.apiUrl + '/api/accounts/create', user, this.jwt());
-    }
-
-    update(user: User) {
-        return this.http.put(this.config.apiUrl + '/users/' + user.id, user, this.jwt());
+    save(user: User) {
+        return this.http.post(this.config.apiUrl + '/api/accounts/save', user, this.authCommonService.GetJwtRequestOptions()).pipe(map((response: Response) => response.json()));
     }
 
     delete(id: number) {
-        return this.http.delete(this.config.apiUrl + '/users/' + id, this.jwt());
-    }
-
-    // private helper methods
-    private jwt() {
-        // create authorization header with jwt token
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (currentUser && currentUser.auth_token) {
-            let headers = new Headers({ 'Authorization': 'Bearer ' + currentUser.auth_token });
-            return new RequestOptions({ headers: headers });
-        }
+        return this.http.delete(this.config.apiUrl + '/api/accounts/delete/' + id, this.authCommonService.GetJwtRequestOptions());
     }
 }
 

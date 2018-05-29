@@ -1,17 +1,46 @@
-<dx-scheduler
-    [dataSource]="appointmentsData"
-    [views]="['day', 'week', 'workWeek', 'month']"
-    currentView="workWeek"
-    [currentDate]="currentDate"
-    [firstDayOfWeek]="0"
-    [startDayHour]="8"
-    [endDayHour]="19"
-    [groups]="['priorityId']"
-    [height]="600">
-    <dxi-resource
-        [dataSource]="prioritiesData"
-        fieldExpr="priorityId"
-        label="Priority"
-        [allowMultiple]="false"
-    ></dxi-resource>
+<dx-scheduler [dataSource]="dutiesData"
+              [views]="['day', 'week', 'month','agenda']"
+              currentView="week"
+              [currentDate]="currentDate"
+              [firstDayOfWeek]="0"
+              [startDayHour]="0"
+              [endDayHour]="24"
+              [groups]="['functionId']"
+              appointmentTemplate="appointmentTemplate"
+              (onAppointmentFormCreated)="onAppointmentFormCreated($event)">
+    <dxi-resource [dataSource]="functionsData"
+                  fieldExpr="functionId"
+                  displayExpr="name"
+                  label="Function"
+                  [allowMultiple]="false">
+    </dxi-resource>
+    <dxi-resource [dataSource]="dutyTypeData"
+                  fieldExpr="dutyTypeId"
+                  displayExpr="name"
+                  label="Dienst"
+                  [allowMultiple]="false"
+                  [useColorAsDefault]="true">
+    </dxi-resource>
+    <dxi-resource [dataSource]="userData"
+                  fieldExpr="userId"
+                  displayExpr="name"
+                  label="Staff"
+                  [allowMultiple]="false">
+    </dxi-resource>
+    <div *dxTemplate="let duty of 'appointmentTemplate'">
+        <div class='appointment-dates'>
+            {{(duty.startDate | date:'shortTime') + ' - ' + (duty.endDate | date:'shortTime')}}
+        </div>
+        <div *ngIf="duty.functionId>0"
+             class='appointment-function'>
+            {{ getFunction(duty.functionId).name }}
+        </div>
+        <div *ngIf="duty.userId>0"
+             class='appointment-user'>
+            {{ getUser(duty.userId).name }}
+        </div>
+        <div class="appoinment-comment">
+            {{duty.comment}}
+        </div>
+    </div>
 </dx-scheduler>

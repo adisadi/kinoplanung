@@ -12,12 +12,14 @@ import {
   DxTextBoxModule,
   DxLoadIndicatorModule,
   DxDataGridModule,
-  DxColorBoxModule
+  DxColorBoxModule,
+  DxDropDownBoxModule
 } from 'devextreme-angular';
 
 
 @NgModule({
   imports: [
+    DxDropDownBoxModule,
     DxDataGridModule,
     DxSchedulerModule,
     DxTemplateModule,
@@ -31,6 +33,7 @@ import {
     DxFormModule
   ],
   exports:[
+    DxDropDownBoxModule,
     DxDataGridModule,
     DxSchedulerModule,
     DxTemplateModule,

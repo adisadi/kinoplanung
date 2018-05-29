@@ -24,6 +24,10 @@ export class TenantCommonService {
     this.tenantSubject.next(tenant);
   }
 
+  notifyChange(){
+    this.getAll();
+  }
+
   getCurrentTenant(defaultTenant: any | null | undefined): any | null {
 
     let currentTenant = localStorage.getItem('currentTenant');

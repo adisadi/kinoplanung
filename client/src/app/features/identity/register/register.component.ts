@@ -31,7 +31,7 @@ export class RegisterComponent implements OnInit {
     if (result.isValid) {
       this.loading = true;
 
-      this.userService.create(this.model)
+      this.userService.save(this.model)
         .subscribe(
           data => {
             this.alertService.success('Registration successful', true);

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,7 +12,7 @@ import { AuthGuard } from './guards/auth.guard';
 
 import { AlertService } from './services/alert.service';
 import { AuthCommonService } from './services/auth-common.service';
-import {TenantCommonService} from './services/tenant-common.service';
+import { TenantCommonService } from './services/tenant-common.service';
 
 import { IdentityModule } from './features/identity/identity.module';
 import { OverviewModule } from './features/overview/overview.module';
@@ -24,6 +24,7 @@ import { DevextremeComponentsModule } from './modules/devextreme-components/deve
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AlertComponent } from './components/alert/alert.component';
+import { AuthErrorHandler } from './errorhandler/auth-error-handler';
 
 
 @NgModule({
@@ -48,7 +49,11 @@ import { AlertComponent } from './components/alert/alert.component';
     AuthGuard,
     AuthCommonService,
     AlertService,
-    TenantCommonService
+    TenantCommonService,
+    {
+      provide: ErrorHandler,
+      useClass: AuthErrorHandler
+    }
   ],
   bootstrap: [AppComponent]
 })

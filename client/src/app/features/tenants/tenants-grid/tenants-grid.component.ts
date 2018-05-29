@@ -3,6 +3,7 @@ import { TenantService } from '../services/tenant.service';
 import { AlertService } from '../../../services/alert.service';
 
 import DataSource from 'devextreme/data/data_source';
+import { TenantCommonService } from '../../../services/tenant-common.service';
 
 @Component({
   selector: 'app-tenants-grid',
@@ -11,7 +12,7 @@ import DataSource from 'devextreme/data/data_source';
 })
 export class TenantsGridComponent implements OnInit {
 
-  constructor(private tenantService: TenantService, private alertService: AlertService) { }
+  constructor(private tenantService: TenantService, private alertService: AlertService, private tenantCommonService:TenantCommonService) { }
 
   dataSource: any = [];
 
@@ -34,6 +35,7 @@ export class TenantsGridComponent implements OnInit {
           (result) => {
             event.data.id = result.new_id;
             this.alertService.success(`Mandant '${event.data.name}' gespeichert.`);
+            this.tenantCommonService.notifyChange();
             resolve(false);
           },
           error => {

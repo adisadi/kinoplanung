@@ -1,5 +1,3 @@
-<dx-toolbar>
-  <dxi-item *ngIf="IsAuthenticated && tenantOptions.items.length" location="before" widget="dxSelectBox" locateInMenu="auto" [options]="tenantOptions"></dxi-item>
-  <dxi-item location="center" text="Kinoplanung" locateInMenu="never"></dxi-item>
-  <dxi-item *ngIf="IsAuthenticated" location="after" locateInMenu="always" widget="dxMenu" [options]="manageOptions"></dxi-item>
+<dx-toolbar [items]="items">
+ 
 </dx-toolbar>

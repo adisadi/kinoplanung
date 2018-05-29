@@ -9,6 +9,7 @@ import { RegisterComponent } from './register/register.component';
 
 import { AuthentificationService } from './services/authentification.service';
 import { UserService } from './services/user.service';
+import { UsersComponent } from './users/users.component';
 
 @NgModule({
   imports: [
@@ -16,7 +17,7 @@ import { UserService } from './services/user.service';
     DevextremeComponentsModule,
     IdentityRoutingModule
   ],
-  declarations: [LoginComponent, RegisterComponent],
+  declarations: [LoginComponent, RegisterComponent, UsersComponent],
   providers: [AuthentificationService, UserService]
 })
 export class IdentityModule { }
