@@ -78,7 +78,7 @@ export class UsersComponent implements OnInit {
       this.userService.save(event.data)
         .subscribe(
           (result) => {
-            event.data.id = result.new_id;
+            event.data.id = result.id;
             this.alertService.success(`Dienst '${event.data.name}' gespeichert.`);
             resolve(false);
           },

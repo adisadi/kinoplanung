@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace KinoplanungApi.Controllers
 {
     /*   [Authorize(Policy = "ApiUser")] */
-     [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
     public class DutyTypeController : Controller
     {
         private readonly ClaimsPrincipal _caller;
@@ -28,7 +28,7 @@ namespace KinoplanungApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll(int id)
         {
-            return new OkObjectResult(await _appDbContext.DutyTypes.Where(d=>d.TenantId==id).ToListAsync());
+            return new OkObjectResult(await _appDbContext.DutyTypes.Where(d => d.TenantId == id).ToListAsync());
         }
 
         [HttpGet]
@@ -49,7 +49,7 @@ namespace KinoplanungApi.Controllers
             _appDbContext.DutyTypes.Remove(dutytype);
             await _appDbContext.SaveChangesAsync();
 
-            return new OkObjectResult($"DutyType with Id:{id} deleted!");
+            return new OkObjectResult(new { text = $"DutyType with Id:{id} deleted!" });
         }
 
         [HttpPost]
@@ -82,7 +82,7 @@ namespace KinoplanungApi.Controllers
 
             await _appDbContext.SaveChangesAsync();
 
-            return new OkObjectResult(new { new_id = dutyType.Id });
+            return new OkObjectResult(dutyType);
         }
     }
 }

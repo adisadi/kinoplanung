@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace KinoplanungApi.Controllers
 {
     /*   [Authorize(Policy = "ApiUser")] */
-     [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
     public class FunctionController : Controller
     {
         private readonly ClaimsPrincipal _caller;
@@ -49,7 +49,7 @@ namespace KinoplanungApi.Controllers
             _appDbContext.Functions.Remove(function);
             await _appDbContext.SaveChangesAsync();
 
-            return new OkObjectResult($"Tenant with Id:{id} deleted!");
+            return new OkObjectResult(new { text = $"Tenant with Id:{id} deleted!" });
         }
 
         [HttpPost]
@@ -77,11 +77,11 @@ namespace KinoplanungApi.Controllers
             }
 
             function.Name = model.Name;
-            function.TenantId=model.TenantId;
+            function.TenantId = model.TenantId;
 
             await _appDbContext.SaveChangesAsync();
 
-            return new OkObjectResult(new { new_id = function.Id });
+            return new OkObjectResult(function);
         }
     }
 }

@@ -48,7 +48,7 @@ export class FunctionsGridComponent implements OnInit {
       this.functionsService.save(event.data)
         .subscribe(
           (result) => {
-            event.data.id = result.new_id;
+            event.data.id = result.id;
             this.alertService.success(`Funktion '${event.data.name}' gespeichert.`);
             resolve(false);
           },

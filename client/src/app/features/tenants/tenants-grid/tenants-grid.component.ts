@@ -12,7 +12,7 @@ import { TenantCommonService } from '../../../services/tenant-common.service';
 })
 export class TenantsGridComponent implements OnInit {
 
-  constructor(private tenantService: TenantService, private alertService: AlertService, private tenantCommonService:TenantCommonService) { }
+  constructor(private tenantService: TenantService, private alertService: AlertService, private tenantCommonService: TenantCommonService) { }
 
   dataSource: any = [];
 
@@ -33,9 +33,9 @@ export class TenantsGridComponent implements OnInit {
       this.tenantService.save(event.data)
         .subscribe(
           (result) => {
-            event.data.id = result.new_id;
+            event.data.id = result.id;
             this.alertService.success(`Mandant '${event.data.name}' gespeichert.`);
-            this.tenantCommonService.notifyChange();
+            this.tenantCommonService.notifyTenantChange();
             resolve(false);
           },
           error => {
@@ -53,10 +53,20 @@ export class TenantsGridComponent implements OnInit {
 
   rowDelete(event) {
     event.cancel = new Promise((resolve, reject) => {
+
+      let currentTenant = this.tenantCommonService.getCurrentTenant(null);
+
+      if (currentTenant && currentTenant.id === event.data.id) {
+        this.alertService.error("Der aktive Mandant kann nicht gelöscht werden. Wechseln Sie zuerst den aktiven Mandanten.");
+        resolve(true);
+        return;
+      }
+
       this.tenantService.delete(event.data.id)
         .subscribe(
           () => {
             this.alertService.success(`Mandant '${event.data.name}' gelöscht`);
+            this.tenantCommonService.notifyTenantChange();
             resolve(false);
           },
           error => {

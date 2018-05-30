@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response, RequestOptions } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -11,7 +11,7 @@ import { AuthCommonService } from '../../../services/auth-common.service';
 })
 export class AuthentificationService {
 
-  constructor(private http: Http, private config: AppConfig, private authCommonService: AuthCommonService) {
+  constructor(private http: HttpClient, private config: AppConfig, private authCommonService: AuthCommonService) {
     console.log('AuthentificationService');
   }
 
@@ -19,8 +19,7 @@ export class AuthentificationService {
 
     console.log(JSON.stringify({ UserName: username, Password: password }));
     return this.http.post(this.config.apiUrl + '/api/auth/login', { UserName: username, Password: password }).pipe(
-      map((response: Response) => {
-        let user = response.json();
+      map((user: any) => {
         if (user.jwt) {
           user.jwt = JSON.parse(user.jwt);
         }

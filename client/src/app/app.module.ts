@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
-import { NgModule, ErrorHandler } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,6 +26,8 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { AuthErrorHandler } from './errorhandler/auth-error-handler';
+import { JWTInterceptor } from './common/jwt-interceptor';
+import { AuthErrorInterceptor } from './common/auth-error-interceptor';
 
 
 @NgModule({
@@ -36,7 +39,7 @@ import { AuthErrorHandler } from './errorhandler/auth-error-handler';
   ],
   imports: [
     BrowserModule,
-    HttpModule,
+    HttpClientModule,
     AppRoutingModule,
     DevextremeComponentsModule,
     IdentityModule,
@@ -51,9 +54,15 @@ import { AuthErrorHandler } from './errorhandler/auth-error-handler';
     AlertService,
     TenantCommonService,
     {
-      provide: ErrorHandler,
-      useClass: AuthErrorHandler
-    }
+      provide: HTTP_INTERCEPTORS,
+      useClass: JWTInterceptor,
+      multi: true
+    },
+   /*  {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthErrorInterceptor,
+      multi: true
+    } */
   ],
   bootstrap: [AppComponent]
 })

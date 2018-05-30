@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions, Response, Headers } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../app.config';
-import { AuthCommonService } from './auth-common.service';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Tenant } from '../features/tenants/services/tenant.service';
 
 
 
@@ -12,23 +12,23 @@ import { map } from 'rxjs/operators';
 })
 export class TenantCommonService {
 
-  constructor(private http: Http, private config: AppConfig, private authCommonService: AuthCommonService) { }
+  constructor(private http: HttpClient, private config: AppConfig) { }
 
   getAll() {
-    return this.http.get(this.config.apiUrl + '/api/tenant/getall', this.authCommonService.GetJwtRequestOptions()).pipe(map((response: Response) => response.json()));
+    return this.http.get<Tenant[]>(this.config.apiUrl + '/api/tenant/getall');
   }
 
-  setCurrentTenant(tenant: any) {
+  setCurrentTenant(tenant: Tenant) {
     console.log('setCurrentTenant:' + JSON.stringify(tenant));
     localStorage.setItem('currentTenant', JSON.stringify(tenant));
     this.tenantSubject.next(tenant);
   }
 
-  notifyChange(){
-    this.getAll();
+  notifyTenantChange(){
+    this.tenantsChange.next();
   }
 
-  getCurrentTenant(defaultTenant: any | null | undefined): any | null {
+  getCurrentTenant(defaultTenant: Tenant | null | undefined): Tenant | null {
 
     let currentTenant = localStorage.getItem('currentTenant');
     console.log(currentTenant);
@@ -42,10 +42,16 @@ export class TenantCommonService {
     return null;
   }
 
-  private tenantSubject = new Subject<any>();
+  private tenantSubject = new Subject<Tenant>();
 
-  CurrentTenant(): Observable<any> {
+  CurrentTenant(): Observable<Tenant> {
     return this.tenantSubject.asObservable();
+  }
+
+  private tenantsChange=new Subject<void>();
+
+  OnTenantsChange(){
+    return this.tenantsChange.asObservable();
   }
 
 }

@@ -54,7 +54,7 @@ namespace KinoplanungApi.Controllers
             _appDbContext.AppUsers.Remove(function);
             await _appDbContext.SaveChangesAsync();
 
-            return new OkObjectResult($"Tenant with Id:{id} deleted!");
+            return new OkObjectResult(new { text = $"Account with Id:{id} deleted!" });
         }
 
         // POST api/accounts
@@ -74,7 +74,7 @@ namespace KinoplanungApi.Controllers
 
             await _appDbContext.SaveChangesAsync();
 
-            return new OkObjectResult("Account created");
+            return new OkObjectResult(model);
         }
     }
 }

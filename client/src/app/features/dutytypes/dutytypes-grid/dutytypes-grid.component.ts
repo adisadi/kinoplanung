@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DutyTypesService } from '../services/dutytypes.service';
+import { DutyTypesService, DutyType } from '../services/dutytypes.service';
 import { AlertService } from '../../../services/alert.service';
 
 import DataSource from 'devextreme/data/data_source';
@@ -43,8 +43,8 @@ export class DutyTypesGridComponent implements OnInit {
     event.cancel = new Promise((resolve, reject) => {
       this.dutyTypeService.save(event.data)
         .subscribe(
-          (result) => {
-            event.data.id = result.new_id;
+          (result: DutyType) => {
+            event.data.id = result.id;
             this.alertService.success(`Dienst '${event.data.name}' gespeichert.`);
             resolve(false);
           },

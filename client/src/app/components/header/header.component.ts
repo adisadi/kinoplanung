@@ -55,6 +55,10 @@ export class HeaderComponent implements OnInit {
         this.loadData(logedin);
       });
     });
+
+    this.tenantCommonService.OnTenantsChange().subscribe(() => {
+      this.loadData(this.IsAuthenticated);
+    });
   }
 
   onTenantChange(tenantId: any) {

@@ -26,7 +26,7 @@ namespace KinoplanungApi.Controllers
         {
             _caller = httpContextAccessor.HttpContext.User;
             _appDbContext = appDbContext;
-            _userId=((ClaimsIdentity)_caller.Identity).FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Id).Value;
+            _userId = ((ClaimsIdentity)_caller.Identity).FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Id).Value;
         }
 
         [Authorize(Roles = "Administrator,Manager,Member")]
@@ -35,10 +35,11 @@ namespace KinoplanungApi.Controllers
         {
             if (_caller.IsInRole("Administrator"))
                 return new OkObjectResult(await _appDbContext.Tenants.ToListAsync());
-            else {
-                return new OkObjectResult( await _appDbContext.Tenants.Where(t=>t.AppUserMappings.Any(m=>m.AppUserId==_userId)).ToListAsync() );
+            else
+            {
+                return new OkObjectResult(await _appDbContext.Tenants.Where(t => t.AppUserMappings.Any(m => m.AppUserId == _userId)).ToListAsync());
             }
-            
+
         }
 
         [Authorize(Roles = "Administrator")]
@@ -61,7 +62,7 @@ namespace KinoplanungApi.Controllers
             _appDbContext.Tenants.Remove(tenant);
             await _appDbContext.SaveChangesAsync();
 
-            return new OkObjectResult($"Tenant with Id:{id} deleted!");
+            return new OkObjectResult(new { text = $"Tenant with Id:{id} deleted!" });
         }
 
         [Authorize(Roles = "Administrator")]
@@ -93,7 +94,7 @@ namespace KinoplanungApi.Controllers
 
             await _appDbContext.SaveChangesAsync();
 
-            return new OkObjectResult(new { new_id = tenant.Id });
+            return new OkObjectResult(tenant);
         }
     }
 }

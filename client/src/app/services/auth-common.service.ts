@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { RequestOptions, Headers } from '@angular/http';
 import { Subject, Observable } from 'rxjs';
 import * as jwt_decode from 'jwt-decode';
 
@@ -61,14 +60,12 @@ export class AuthCommonService {
     this.logger.next(false);
   }
 
-  GetJwtRequestOptions(): RequestOptions {
-    // create authorization header with jwt token
+  GetToken(): string {
     let currentUser = JSON.parse(localStorage.getItem(TOKEN_NAME));
     if (currentUser && currentUser.jwt && currentUser.jwt.auth_token) {
-      console.log(JSON.stringify({ 'Authorization': 'Bearer ' + currentUser.jwt.auth_token }));
-      let headers = new Headers({ 'Authorization': 'Bearer ' + currentUser.jwt.auth_token });
-      return new RequestOptions({ headers: headers });
+      return currentUser.jwt.auth_token;
     }
+    return null;
   }
 
   private getTokenExpirationDate(token: string): Date {
@@ -78,17 +75,17 @@ export class AuthCommonService {
 
     const date = new Date(0);
     date.setUTCSeconds(decoded.exp);
-    console.log("Token Expire Date:"+ date.toISOString());
+    console.log("Token Expire Date:" + date.toISOString());
     return date;
   }
 
   private isTokenExpired(token: string): boolean {
-    if(!token) return true;
+    if (!token) return true;
 
     const date = this.getTokenExpirationDate(token);
-    if(date === undefined) return false;
+    if (date === undefined) return false;
     return !(date.valueOf() > new Date().valueOf());
-}
+  }
 }
 
 export enum Roles { Administrator = 0, Manager = 1, Member = 2, NotAuthenticated = 3 };

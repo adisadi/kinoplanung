@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions, Response, Headers } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { AppConfig } from '../../../app.config';
 import { Observable } from 'rxjs';
@@ -12,26 +12,26 @@ import { TenantCommonService } from '../../../services/tenant-common.service';
 })
 export class DutyTypesService {
 
-  constructor(private http: Http,
+  constructor(private http: HttpClient,
      private config: AppConfig,
      private authCommonService: AuthCommonService,
      private tenantCommonService: TenantCommonService) { }
 
     getAll() {
-        return this.http.get(this.config.apiUrl + '/api/dutytype/getall/' +  this.tenantCommonService.getCurrentTenant(null).id, this.authCommonService.GetJwtRequestOptions()).pipe(map((response: Response) => response.json()));
+        return this.http.get(this.config.apiUrl + '/api/dutytype/getall/' +  this.tenantCommonService.getCurrentTenant(null).id);
     }
 
     getById(id: number) {
-        return this.http.get(this.config.apiUrl + '/api/dutytype/get/' + id, this.authCommonService.GetJwtRequestOptions()).pipe(map((response: Response) => response.json()));
+        return this.http.get(this.config.apiUrl + '/api/dutytype/get/' + id);
     }
 
     save(dutyType: DutyType) {
         dutyType.tenantid= this.tenantCommonService.getCurrentTenant(null).id;
-        return this.http.post(this.config.apiUrl + '/api/dutytype/save', dutyType, this.authCommonService.GetJwtRequestOptions()).pipe(map((response: Response) => response.json()));
+        return this.http.post<DutyType>(this.config.apiUrl + '/api/dutytype/save', dutyType);
     }
 
     delete(id: number) {
-        return this.http.delete(this.config.apiUrl + '/api/dutytype/delete/' + id, this.authCommonService.GetJwtRequestOptions());
+        return this.http.delete(this.config.apiUrl + '/api/dutytype/delete/' + id);
     }
 }
 
